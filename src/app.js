@@ -3,7 +3,6 @@ const cors = require("cors");
 const express = require("express");
 const routes = require("./routes/index");
 const cookieParser = require("cookie-parser");
-const setupLogger = require("./helper/logger");
 
 const corsOptions = {
   host: "http://localhost:3000",
@@ -15,7 +14,6 @@ const corsOptions = {
 
 const app = express();
 
-setupLogger(app);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
