@@ -2,37 +2,8 @@ const axios = require("axios");
 const Appointment = require("../models/appointment.model");
 const { default: slugify } = require("slugify");
 
-const ZOOM_API_KEY = "your_zoom_api_key";
-const ZOOM_API_SECRET = "your_zoom_api_secret";
-const ZOOM_USER_ID = "your_zoom_user_id";
-const ZOOM_API_URL = "https://api.zoom.us/v2/users/";
 
 class AppointmentService {
-  async createZoomMeeting(topic, startTime) {
-    const response = await axios.post(
-      `${ZOOM_API_URL}${ZOOM_USER_ID}/meetings`,
-      {
-        topic,
-        type: 2, // Scheduled meeting
-        start_time: startTime,
-        duration: 30, // Default duration 30 minutes
-        timezone: "UTC",
-        settings: {
-          host_video: true,
-          participant_video: true,
-          join_before_host: false,
-        },
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${ZOOM_API_KEY}:${ZOOM_API_SECRET}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data;
-  }
-
   async generateMeetingLink(topic) {
     const roomId = slugify(`${topic}`, {
       lower: true,
