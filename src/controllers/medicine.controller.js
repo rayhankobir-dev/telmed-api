@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const MedicineService = require("../services/medicine.service");
 
 const getMedicines = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, keyword } = req.query;
+  const { page = 1, limit = 200, keyword } = req.query;
   const filters = {};
 
   if (keyword) {

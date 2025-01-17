@@ -19,7 +19,7 @@ class PaymentService {
       tran_id: transactionId,
       success_url: `${process.env.BASE_URL}/${prefix}/success`,
       fail_url: `${process.env.BASE_URL}/${prefix}/fail`,
-      cancel_url: `${process.env.BASE_URL}/${prefix}/cancel`,
+      cancel_url: `${process.env.BASE_URL}/${prefix}/fail`,
       ipn_url: `${process.env.BASE_URL}/${prefix}/ipn`,
       shipping_method: "Courier",
       product_name: "Medicines",

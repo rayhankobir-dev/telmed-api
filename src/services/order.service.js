@@ -14,25 +14,16 @@ class OrderService {
   }
 
   // Get all orders with pagination
-  static async getAllOrders(page = 1, limit = 10) {
+  static async getAllOrders(filter = {}) {
     try {
-      const skip = (page - 1) * limit;
-      const orders = await Order.find()
-        .skip(skip)
-        .limit(limit)
-        .populate("user", "name email") // populate user data (optional)
-        .populate("medicines.medicine", "name price") // populate medicine data (optional)
-        .sort({ orderDate: -1 }); // Sort by orderDate descending (optional)
-
-      const totalOrders = await Order.countDocuments();
-      const totalPages = Math.ceil(totalOrders / limit);
-
-      return {
-        orders,
-        totalOrders,
-        totalPages,
-        currentPage: page,
-      };
+      const orders = await Order.find(filter)
+        .populate("user", "name email")
+        .populate(
+          "medicines.medicine",
+          "image name price generic dosageForm company"
+        )
+        .sort({ orderDate: -1 });
+      return orders;
     } catch (error) {
       throw new Error(`Error fetching orders: ${error.message}`);
     }

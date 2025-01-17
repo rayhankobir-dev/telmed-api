@@ -81,6 +81,11 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await UserService.deleteUser(req.params.id);
+  res.json(user);
+});
+
 const getProfile = asyncHandler(async (req, res) => {
   const user = await UserService.getUserById(req.user._id);
   res.json(user);
@@ -138,4 +143,5 @@ module.exports = {
   getProfile,
   updateProfile,
   changePassword,
+  deleteUser,
 };

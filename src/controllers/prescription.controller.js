@@ -10,7 +10,11 @@ const getUserPrescriptions = asyncHandler(async (req, res) => {
 
 const addPrescription = asyncHandler(async (req, res) => {
   const { medicines, title, description } = req.body;
-  console.log({ medicines, title, description });
+
+  if(!medicines || medicines.length === 0) {
+    return res.status(400).json({ message: "Please provide prescription image" });
+  }
+
   const prescription = await PrescriptionService.createPrescription(
     req.user._id,
     medicines,

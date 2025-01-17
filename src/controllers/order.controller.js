@@ -3,7 +3,31 @@ const OrderService = require("../services/order.service");
 const asyncHandler = require("express-async-handler");
 const Order = require("../models/order.model");
 const User = require("../models/user.model");
+const Medicine = require("../models/medicine.model");
+const Appointment = require("../models/appointment.model");
 require("dotenv").config();
+
+const getAnalytics = asyncHandler(async (req, res) => {
+  const stats = {
+    totalOrders: await Order.countDocuments({ paymentStatus: "completed" }),
+    totalUsers: await User.countDocuments({ role: "USER" }),
+    totalDoctors: await User.countDocuments({ role: "DOCTOR" }),
+    totalMedicines: await Medicine.countDocuments(),
+    totalAppointments: await Appointment.countDocuments({
+      paymentStatus: "paid",
+    }),
+    totalOrderValue: await Order.aggregate([
+      { $match: { paymentStatus: "completed" } },
+      { $group: { _id: null, totalPrice: { $sum: "$totalPrice" } } },
+    ]),
+    totalAppointmentValue: await Appointment.aggregate([
+      { $match: { paymentStatus: "paid" } },
+      { $group: { _id: null, totalPrice: { $sum: "$price" } } },
+    ]),
+  };
+
+  res.json({ stats });
+});
 
 const initiatePayment = asyncHandler(async (req, res) => {
   try {
@@ -72,7 +96,11 @@ const paymentFail = asyncHandler(async (req, res) => {
 });
 
 const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await OrderService.getAllOrders();
+  const filter = {};
+  if (req.query.status) {
+    filter.status = req.query.status;
+  }
+  const orders = await OrderService.getAllOrders(filter);
   res.json(orders);
 });
 
@@ -121,4 +149,5 @@ module.exports = {
   paymentSuccess,
   paymentFail,
   getMyOrders,
+  getAnalytics,
 };

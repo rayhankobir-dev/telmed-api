@@ -6,6 +6,7 @@ const {
   getAllUsers,
   updateProfile,
   changePassword,
+  deleteUser,
 } = require("../controllers/user.controller");
 const { userRoles } = require("../helper/constant");
 const auth = require("../middlewares/auth.middleware");
@@ -16,6 +17,7 @@ const router = express.Router();
 
 router.get("/", getAllUsers);
 router.post("/", registerUser);
+router.delete("/:id", auth, permission(["ADMIN"]), deleteUser);
 router.post("/login", loginUser);
 router.get("/profile", auth, getProfile);
 router.post("/change-password", auth, changePassword);

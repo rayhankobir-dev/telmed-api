@@ -10,7 +10,8 @@ class MedicineService {
   async getMedicines(filters, page = 1, limit = 10) {
     const medicines = await Medicine.find(filters)
       .skip((page - 1) * limit)
-      .limit(parseInt(limit));
+      .limit(parseInt(limit))
+      .sort({ createdAt: -1 });
 
     const total = await Medicine.countDocuments(filters);
 
